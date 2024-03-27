@@ -14,30 +14,33 @@ class PIDController
 {
 public:
     using Ptr = std::unique_ptr<PIDController>; ///< Pointer type of this class
-    
+
     // Constructor that takes three parameters for PID values
-    PIDController(PREC kp, PREC ki, PREC kd);
+    PIDController(PREC Kp, PREC Ki, PREC Kd);
 
     // Function to compute the control output
     PREC getControlOutput(PREC error);
 
 private:
-    PREC kp_, ki_, kd_; // PID coefficients
+    PREC Kp, Ki, Kd; // PID coefficients
     // Other private members and methods as needed
+    PREC integral;
+    PREC prev_error;
+    PREC derivative;
 };
 
-template <typename PREC>
-PIDController<PREC>::PIDController(PREC kp, PREC ki, PREC kd)
-    : kp_(kp), ki_(ki), kd_(kd) {
-    // Constructor implementation
-}
+// template <typename PREC>
+// PIDController<PREC>::PIDController(PREC kp, PREC ki, PREC kd)
+//     : kp_(kp), ki_(ki), kd_(kd) {
+//     // Constructor implementation
+// }
 
-template <typename PREC>
-PREC PIDController<PREC>::getControlOutput(PREC error) {
-    // Implementation of PID control logic
-    // This is a placeholder; you'll need to implement the PID logic based on kp_, ki_, kd_, and the error
-    return (kp_ * error); // Simplified example
-}
+// template <typename PREC>
+// PREC PIDController<PREC>::getControlOutput(PREC error) {
+//     // Implementation of PID control logic
+//     // This is a placeholder; you'll need to implement the PID logic based on kp_, ki_, kd_, and the error
+//     return (kp_ * error); // Simplified example
+// }
 
 } // namespace Xycar
 #endif // PID_CONTROLLER_HPP_

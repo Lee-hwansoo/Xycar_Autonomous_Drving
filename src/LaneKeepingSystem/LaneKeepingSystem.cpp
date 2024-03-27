@@ -64,6 +64,7 @@ void LaneKeepingSystem<PREC>::run()
 
         if (mStopLineDetector->detect(mBlurredRoiImage))
         {
+            ROS_INFO("STOP");
             xycar_msgs::xycar_motor motorMessage;
             motorMessage.angle = 0;
             motorMessage.speed = 0;
