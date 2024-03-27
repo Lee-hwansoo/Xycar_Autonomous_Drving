@@ -64,11 +64,7 @@ void LaneKeepingSystem<PREC>::run()
 
         if (mStopLineDetector->detect(mBlurredRoiImage))
         {
-            ROS_INFO("STOP");
-            xycar_msgs::xycar_motor motorMessage;
-            motorMessage.angle = 0;
-            motorMessage.speed = 0;
-            mPublisher.publish(motorMessage);
+            finish();
             break;
         }
 
@@ -123,6 +119,33 @@ void LaneKeepingSystem<PREC>::drive(PREC steeringAngle)
     motorMessage.speed = std::round(mXycarSpeed);
 
     mPublisher.publish(motorMessage);
+}
+
+template <typename PREC>
+void LaneKeepingSystem<PREC>::finish()
+{
+    ROS_INFO("STOP Detected - Starting Deceleration");
+    PREC decelerationRate = 0.2; // 감속 비율 (예: 현재 속도의 20%만큼 감속)
+    int decelerationInterval = 100; // 감속 간격 (ms)
+    PREC minSpeed = static_cast<PREC>(0.1); // 이 속도 이하에서는 차량을 정지시킴
+
+    while (mXycarSpeed > minSpeed && ros::ok())
+    {
+        mXycarSpeed *= (1 - decelerationRate); // 현재 속도에서 일정 비율 감소
+        if (mXycarSpeed <= minSpeed)
+        {
+            mXycarSpeed = 0; // 최소 속도에 도달하면 완전히 정지
+            ROS_INFO("Car Stopped");
+        }
+
+        // 차량 제어 메시지 업데이트 및 발행
+        xycar_msgs::xycar_motor motorMessage;
+        motorMessage.angle = 0; // 감속 중에는 핸들 각도를 0으로 유지
+        motorMessage.speed = std::round(mXycarSpeed);
+        mPublisher.publish(motorMessage);
+
+        ros::Duration(decelerationInterval / 1000.0).sleep(); // 다음 감속까지 일정 시간 대기
+    }
 }
 
 template class LaneKeepingSystem<float>;

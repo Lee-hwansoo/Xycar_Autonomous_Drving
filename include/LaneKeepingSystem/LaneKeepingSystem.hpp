@@ -83,6 +83,8 @@ private:
      */
     void imageCallback(const sensor_msgs::Image& message);
 
+    void finish();
+
 private:
     ControllerPtr mPID;                      ///< PID Class for Control
     FilterPtr mMovingAverage;                ///< Moving Average Filter Class for Noise filtering
