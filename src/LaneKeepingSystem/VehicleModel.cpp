@@ -12,7 +12,7 @@ void VehicleModel<PREC>::update(PREC velocity, PREC deltaSteeringAngle, PREC dt)
 {
     // Update the position
     mX += velocity * std::cos(mHeading) * dt;
-    mX += velocity * std::sin(mHeading) * dt;
+    mY += velocity * std::sin(mHeading) * dt;
 
     // Update the heading
     mHeading += velocity / wheelBase * std::tan(deltaSteeringAngle) * dt;
