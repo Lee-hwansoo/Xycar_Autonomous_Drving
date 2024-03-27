@@ -25,6 +25,7 @@ LaneKeepingSystem<PREC>::LaneKeepingSystem()
     YAML::Node calibration = YAML::LoadFile(calibrationPath);
 
     mPID = std::make_unique<PIDController<PREC>>(config["PID"]["P_GAIN"].as<PREC>(), config["PID"]["I_GAIN"].as<PREC>(), config["PID"]["D_GAIN"].as<PREC>());
+    mStanley = std::make_unique<StanleyController<PREC>>(config["STANLEY"]["K_GAIN"].as<PREC>(), config["STANLEY"]["LOOK_AHREAD_DISTANCE"].as<PREC>());
     mMovingAverage = std::make_unique<MovingAverageFilter<PREC>>(config["MOVING_AVERAGE_FILTER"]["SAMPLE_SIZE"].as<uint32_t>());
     mImgPreProcessor = std::make_unique<IMGPreProcessor<PREC>>(config, calibration);
     mStopLineDetector = std::make_unique<StopLineDetector<PREC>>(config);

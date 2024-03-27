@@ -24,6 +24,7 @@
 #include "LaneKeepingSystem/PIDController.hpp"
 #include "LaneKeepingSystem/ImgPreProcessor.hpp"
 #include "LaneKeepingSystem/StopLineDetector.hpp"
+#include "LaneKeepingSystem/StanleyController.hpp"
 
 namespace Xycar {
 /**
@@ -36,7 +37,8 @@ class LaneKeepingSystem
 {
 public:
     using Ptr = std::unique_ptr<LaneKeepingSystem>;                     ///< Pointer type of this class
-    using ControllerPtr = typename PIDController<PREC>::Ptr;            ///< Pointer type of PIDController
+    using PIDControllerPtr = typename PIDController<PREC>::Ptr;            ///< Pointer type of PIDController
+    using StanleyControllerPtr = typename StanleyController<PREC>::Ptr; ///< Pointer type of StanleyController
     using FilterPtr = typename MovingAverageFilter<PREC>::Ptr;          ///< Pointer type of MovingAverageFilter
     using PreProcessorPtr = typename IMGPreProcessor<PREC>::Ptr;        ///< Pointer type of IMGPreProcessor
     using StopLineDetectorPtr = typename StopLineDetector<PREC>::Ptr;       ///< Pointer type of StopLineDetector
@@ -86,7 +88,8 @@ private:
     void finish();
 
 private:
-    ControllerPtr mPID;                      ///< PID Class for Control
+    PIDControllerPtr mPID;                      ///< PID Class for Control
+    StanleyControllerPtr mStanley;    ///< Stanley Controller Class for Control
     FilterPtr mMovingAverage;                ///< Moving Average Filter Class for Noise filtering
     PreProcessorPtr mImgPreProcessor;        ///< Image Preprocessor Class for Image Preprocessing
     StopLineDetectorPtr mStopLineDetector;       ///< Stop Line Detector Class for Stop Line Detection
