@@ -131,6 +131,9 @@ add_library(modules
   src/${PROJECT_NAME}/LaneKeepingSystem.cpp
   src/${PROJECT_NAME}/StanleyController.cpp
   src/${PROJECT_NAME}/VehicleModel.cpp
+  src/${PROJECT_NAME}/ImgToMp4.cpp
+  src/${PROJECT_NAME}/ImgPreProcessor.cpp
+  src/${PROJECT_NAME}/StopLineDetector.cpp
 )
 
 add_executable(${PROJECT_NAME}_node src/main.cpp)

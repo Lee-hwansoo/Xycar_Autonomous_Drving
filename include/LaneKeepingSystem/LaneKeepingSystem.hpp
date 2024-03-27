@@ -22,6 +22,8 @@
 #include "LaneKeepingSystem/HoughTransformLaneDetector.hpp"
 #include "LaneKeepingSystem/MovingAverageFilter.hpp"
 #include "LaneKeepingSystem/PIDController.hpp"
+#include "LaneKeepingSystem/ImgPreProcessor.hpp"
+#include "LaneKeepingSystem/StopLineDetector.hpp"
 
 namespace Xycar {
 /**
@@ -36,6 +38,8 @@ public:
     using Ptr = std::unique_ptr<LaneKeepingSystem>;                     ///< Pointer type of this class
     using ControllerPtr = typename PIDController<PREC>::Ptr;            ///< Pointer type of PIDController
     using FilterPtr = typename MovingAverageFilter<PREC>::Ptr;          ///< Pointer type of MovingAverageFilter
+    using PreProcessorPtr = typename IMGPreProcessor<PREC>::Ptr;        ///< Pointer type of IMGPreProcessor
+    using StopLineDetectorPtr = typename StopLineDetector<PREC>::Ptr;       ///< Pointer type of StopLineDetector
     using DetectorPtr = typename HoughTransformLaneDetector<PREC>::Ptr; ///< Pointer type of LaneDetector
 
     static constexpr int32_t kXycarSteeringAangleLimit = 50; ///< Xycar Steering Angle Limit
@@ -82,6 +86,8 @@ private:
 private:
     ControllerPtr mPID;                      ///< PID Class for Control
     FilterPtr mMovingAverage;                ///< Moving Average Filter Class for Noise filtering
+    PreProcessorPtr mImgPreProcessor;        ///< Image Preprocessor Class for Image Preprocessing
+    StopLineDetectorPtr mStopLineDetector;       ///< Stop Line Detector Class for Stop Line Detection
     DetectorPtr mHoughTransformLaneDetector; ///< Hough Transform Lane Detector Class for Lane Detection
 
     // ROS Variables
@@ -95,6 +101,8 @@ private:
 
     // OpenCV Image processing Variables
     cv::Mat mFrame; ///< Image from camera. The raw image is converted into cv::Mat
+    cv::Mat mBlurredRoiImage; ///< Blurred image of region of interest
+    cv::Mat mEdgedRoiImage;   ///< Edged image of region of interest
 
     // Xycar Device variables
     PREC mXycarSpeed;                 ///< Current speed of xycar

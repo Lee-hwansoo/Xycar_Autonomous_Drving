@@ -79,7 +79,7 @@ public:
      * @param[in] image Image for searching lane position
      * @return Left x position and Right x position
      */
-    std::pair<int32_t, int32_t> getLanePosition(const cv::Mat& image);
+    std::pair<int32_t, int32_t> getLanePosition(const cv::Mat& image, const cv::Mat& edgedRoiImage);
 
     /**
      * @brief Draw the position rectangles on debug image

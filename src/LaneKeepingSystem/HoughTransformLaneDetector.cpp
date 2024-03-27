@@ -137,16 +137,10 @@ std::pair<Indices, Indices> HoughTransformLaneDetector<PREC>::divideLines(const 
 }
 
 template <typename PREC>
-std::pair<int32_t, int32_t> HoughTransformLaneDetector<PREC>::getLanePosition(const cv::Mat& image)
+std::pair<int32_t, int32_t> HoughTransformLaneDetector<PREC>::getLanePosition(const cv::Mat& image, const cv::Mat& edgedRoiImage)
 {
-    cv::Mat grayImage;
-    cv::cvtColor(image, grayImage, cv::COLOR_BGR2GRAY);
-
-    cv::Mat cannyImage;
-    cv::Canny(grayImage, cannyImage, mCannyEdgeLowThreshold, mCannyEdgeHighThreshold);
-    cv::Mat ROI = cannyImage(cv::Rect(0, mROIStartHeight, mImageWidth, mROIHeight));
     Lines allLines;
-    cv::HoughLinesP(ROI, allLines, kHoughRho, kHoughTheta, mHoughThreshold, mHoughMinLineLength, mHoughMaxLineGap);
+    cv::HoughLinesP(edgedRoiImage, allLines, kHoughRho, kHoughTheta, mHoughThreshold, mHoughMinLineLength, mHoughMaxLineGap);
 
     if (mDebugging)
         image.copyTo(mDebugFrame);

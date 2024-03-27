@@ -18,11 +18,16 @@ template <typename PREC>
 LaneKeepingSystem<PREC>::LaneKeepingSystem()
 {
     std::string configPath;
+    std::string calibrationPath;
     mNodeHandler.getParam("config_path", configPath);
+    mNodeHandler.getParam("calibration_path", calibrationPath);
     YAML::Node config = YAML::LoadFile(configPath);
+    YAML::Node calibration = YAML::LoadFile(calibrationPath);
 
     mPID = std::make_unique<PIDController<PREC>>(config["PID"]["P_GAIN"].as<PREC>(), config["PID"]["I_GAIN"].as<PREC>(), config["PID"]["D_GAIN"].as<PREC>());
     mMovingAverage = std::make_unique<MovingAverageFilter<PREC>>(config["MOVING_AVERAGE_FILTER"]["SAMPLE_SIZE"].as<uint32_t>());
+    mImgPreProcessor = std::make_unique<IMGPreProcessor<PREC>>(config, calibration);
+    mStopLineDetector = std::make_unique<StopLineDetector<PREC>>(config);
     mHoughTransformLaneDetector = std::make_unique<HoughTransformLaneDetector<PREC>>(config);
     setParams(config);
 
@@ -55,7 +60,18 @@ void LaneKeepingSystem<PREC>::run()
         if (mFrame.empty())
             continue;
 
-        const auto [leftPosisionX, rightPositionX] = mHoughTransformLaneDetector->getLanePosition(mFrame);
+        mImgPreProcessor->preprocessImage(mFrame, mBlurredRoiImage, mEdgedRoiImage);
+
+        if (mStopLineDetector->detect(mBlurredRoiImage))
+        {
+            xycar_msgs::xycar_motor motorMessage;
+            motorMessage.angle = 0;
+            motorMessage.speed = 0;
+            mPublisher.publish(motorMessage);
+            break;
+        }
+
+        const auto [leftPosisionX, rightPositionX] = mHoughTransformLaneDetector->getLanePosition(mframe, mEdgedRoiImage);
 
         mMovingAverage->addSample(static_cast<int32_t>((leftPosisionX + rightPositionX) / 2));
 
