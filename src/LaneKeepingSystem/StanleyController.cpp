@@ -2,6 +2,7 @@
 // All rights reserved.
 
 #include "LaneKeepingSystem/StanleyController.hpp"
+#include <cmath>
 
 namespace Xycar {
 
@@ -15,7 +16,7 @@ void StanleyController<PREC>::calculateSteeringAngle(PREC crossTrackError, PREC 
     PREC desiredHeading = this->normalizeAngle(headingError) + alpha;
 
     // Calculate the steering angle using the desired heading and look-ahead distance
-    this->mResult = std::atan2(2 * mLookAheadDistance * std::sin(desiredHeading), velocity);
+    this->mResult = std::atan2(2 * mLookAheadDistance * std::sin(desiredHeading), velocity) * (180.0 / M_PI);
 }
 
 template class StanleyController<float>;
