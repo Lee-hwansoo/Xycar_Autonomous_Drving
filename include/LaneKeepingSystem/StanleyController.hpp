@@ -13,7 +13,7 @@
 #include <cstdint>
 #include <memory>
 
-#include "Controller.hpp"
+#include "LaneKeepingSystem/Controller.hpp"
 
 namespace Xycar {
 /**
