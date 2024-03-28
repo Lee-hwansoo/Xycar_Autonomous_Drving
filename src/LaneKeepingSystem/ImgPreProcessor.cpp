@@ -54,13 +54,13 @@ void IMGPreProcessor<PREC>::preprocessImage(const cv::Mat& image, cv::Mat& blurr
     cv::Mat undistortedImage;
     cv::undistort(blackMask, undistortedImage, mCameraMatrix, mDistortionCoeffs);
 
-    // Convert undistorted image to grayscale
-    cv::Mat grayImage;
-    cv::cvtColor(undistortedImage, grayImage, cv::COLOR_BGR2GRAY);
+    // // Convert undistorted image to grayscale
+    // cv::Mat grayImage;
+    // cv::cvtColor(undistortedImage, grayImage, cv::COLOR_BGR2GRAY);
 
     // Apply Gaussian blur
     cv::Mat blurredImage;
-    cv::GaussianBlur(grayImage, blurredImage, cv::Size(7, 7), 0);
+    cv::GaussianBlur(undistortedImage, blurredImage, cv::Size(7, 7), 0);
 
     // Apply Canny edge detection
     cv::Mat edgesImage;
