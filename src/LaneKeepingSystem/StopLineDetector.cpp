@@ -22,7 +22,7 @@ StopLineDetector<PREC>::StopLineDetector(const YAML::Node& config) {
     STARTWIDTH = 100;
     WIDTH = mImageWidth - (2 * STARTWIDTH);
     ROI = cv::Rect(STARTWIDTH, STARTHEIGHT, WIDTH, HEIGHT);   // cv::Rect(x, y, width, height)
-    THRESHOLD = WIDTH * HEIGHT * 0.7;
+    THRESHOLD = WIDTH * HEIGHT * 0.55;
 }
 
 template <typename PREC>
