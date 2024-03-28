@@ -75,27 +75,6 @@ void LaneKeepingSystem<PREC>::run()
 
         int32_t estimatedPositionX = static_cast<int32_t>(mMovingAverage->getResult());
 
-        // int32_t imageWidth = mEdgedRoiImage.cols; // mEdgedRoiImage의 너비
-        // int32_t imageHeight = mEdgedRoiImage.rows; // mEdgedRoiImage의 높이
-        // int32_t imageCenterX = imageWidth / 2; // 이미지의 중심 X 값
-        // int32_t A_y = imageHeight / 2; // ROI의 중간 높이의 Y 값
-        // int32_t B_y = imageHeight; // ROI의 최하단 Y 값 (이미지 높이)
-
-        // float crossTrackError = estimatedPositionX - imageCenterX; // 교차 트랙 오류로서 X축 변화량을 사용
-        // float deltaY = B_y - A_y; // Y축 변화량
-
-        // // atan2는 두 점 사이의 각도를 라디안으로 반환합니다.
-        // // 여기서 headingError는 차량의 진행 방향과 목표 경로 사이의 각도 차이를 의미합니다.
-        // // 주의: 실제 차량의 헤딩 각도와 관련된 계산이 필요할 수 있습니다.
-        // float headingError = std::atan2(deltaY, crossTrackError);
-
-        // // StanleyController의 calculateSteeringAngle 메서드를 호출
-        // // 주의: 메서드의 정의에 따라 인자가 올바르게 전달되어야 합니다.
-        // mStanley->calculateSteeringAngle(crossTrackError, headingError, mXycarSpeed);
-
-        // // 조향각을 가져오거나 사용
-        // PREC steeringAngle = mStanley->getControlOutput();
-
         int32_t errorFromMid = estimatedPositionX - static_cast<int32_t>(mFrame.cols / 2);
         PREC steeringAngle = std::max(static_cast<PREC>(-kXycarSteeringAangleLimit), std::min(static_cast<PREC>(mPID->getControlOutput(errorFromMid)), static_cast<PREC>(kXycarSteeringAangleLimit)));
 
