@@ -23,7 +23,7 @@ public:
 
     ~StopLineDetector();
 
-    bool detect(cv::Mat& blurredRoiImage);
+    bool detect(const cv::Mat& maskedRoiImage);
 
 private:
     cv::Rect ROI;                    ///< The region of interest for detection

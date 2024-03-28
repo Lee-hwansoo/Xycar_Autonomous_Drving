@@ -29,8 +29,8 @@ template <typename PREC>
 StopLineDetector<PREC>::~StopLineDetector() {}
 
 template <typename PREC>
-bool StopLineDetector<PREC>::detect(cv::Mat& blurredRoiImage) {
-    cv::Mat stopLine = blurredRoiImage(ROI);
+bool StopLineDetector<PREC>::detect(const cv::Mat& maskedRoiImage) {
+    cv::Mat stopLine = maskedRoiImage(ROI);
     nonZero = cv::countNonZero(stopLine);
     return (nonZero> THRESHOLD) ? true : false;
 }

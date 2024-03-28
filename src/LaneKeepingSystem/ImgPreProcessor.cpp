@@ -37,13 +37,17 @@ template <typename PREC>
 IMGPreProcessor<PREC>::~IMGPreProcessor() {}
 
 template <typename PREC>
-void IMGPreProcessor<PREC>::preprocessImage(cv::Mat& image, cv::Mat& blurredRoiImage ,cv::Mat& edgedRoiImage) {
+void IMGPreProcessor<PREC>::preprocessImage(cv::Mat& image, cv::Mat& maskedRoiImage, cv::Mat& edgedRoiImage) {
     // Undistort the image
     cv::undistort(image, image, mCameraMatrix, mDistortionCoeffs);
 
+    // Apply Gaussian blur
+    cv::Mat blurredImage;
+    cv::GaussianBlur(image, blurredImage, cv::Size(5, 5), 0);
+
     // Convert image to HLS color space
     cv::Mat hlsImage;
-    cv::cvtColor(image, hlsImage, cv::COLOR_BGR2HLS);
+    cv::cvtColor(blurredImage, hlsImage, cv::COLOR_BGR2HLS);
 
     // Define lower and upper bounds for black color (in HLS space)
     cv::Scalar lowerBlack(0, 0, 0);
@@ -53,19 +57,15 @@ void IMGPreProcessor<PREC>::preprocessImage(cv::Mat& image, cv::Mat& blurredRoiI
     cv::Mat blackMask;
     cv::inRange(hlsImage, lowerBlack, upperBlack, blackMask);
 
-    // Apply Gaussian blur
-    cv::Mat blurredImage;
-    cv::GaussianBlur(blackMask, blurredImage, cv::Size(7, 7), 0);
-
     // Apply Canny edge detection
     cv::Mat edgesImage;
-    cv::Canny(blurredImage, edgesImage, mCannyEdgeLowThreshold, mCannyEdgeHighThreshold);
+    cv::Canny(blackMask, edgesImage, mCannyEdgeLowThreshold, mCannyEdgeHighThreshold);
 
     // Apply ROI
-    cv::Mat roiImage1 = blurredImage(cv::Rect(0, mROIStartHeight, mImageWidth, mROIHeight));
+    cv::Mat roiImage1 = blackMask(cv::Rect(0, mROIStartHeight, mImageWidth, mROIHeight));
     cv::Mat roiImage2 = edgesImage(cv::Rect(0, mROIStartHeight, mImageWidth, mROIHeight));
 
-    blurredRoiImage = roiImage1.clone(); // Cloning the ROI image for further processing -> 정지선 검출
+    maskedRoiImage = roiImage1.clone(); // Cloning the ROI image for further processing -> 정지선 검출
     edgedRoiImage = roiImage2.clone(); // Cloning the ROI image for further processing -> 차선 검출
 }
 

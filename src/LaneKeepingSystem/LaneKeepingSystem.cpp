@@ -61,9 +61,9 @@ void LaneKeepingSystem<PREC>::run()
         if (mFrame.empty())
             continue;
 
-        mImgPreProcessor->preprocessImage(mFrame, mBlurredRoiImage, mEdgedRoiImage);
+        mImgPreProcessor->preprocessImage(mFrame, mMaskedRoiImage, mEdgedRoiImage);
 
-        // if (mStopLineDetector->detect(mBlurredRoiImage))
+        // if (mStopLineDetector->detect(mMaskedRoiImage))
         // {
         //     finish();
         //     break;

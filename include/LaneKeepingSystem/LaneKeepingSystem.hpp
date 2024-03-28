@@ -106,7 +106,7 @@ private:
 
     // OpenCV Image processing Variables
     cv::Mat mFrame; ///< Image from camera. The raw image is converted into cv::Mat
-    cv::Mat mBlurredRoiImage; ///< Blurred image of region of interest
+    cv::Mat mMaskedRoiImage; ///< Blurred image of region of interest
     cv::Mat mEdgedRoiImage;   ///< Edged image of region of interest
 
     // Xycar Device variables
