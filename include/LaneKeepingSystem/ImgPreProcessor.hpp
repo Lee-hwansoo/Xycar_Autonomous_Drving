@@ -39,7 +39,7 @@ public:
      * @param image Input image for preprocessing
      * @param output Preprocessed image for lane detection
      */
-    void preprocessImage(const cv::Mat& image, cv::Mat& blurredRoiImage ,cv::Mat& edgedRoiImage);
+    void preprocessImage(cv::Mat& image, cv::Mat& blurredRoiImage ,cv::Mat& edgedRoiImage);
 
 private:
     int32_t mImageWidth;            ///< The width of the image

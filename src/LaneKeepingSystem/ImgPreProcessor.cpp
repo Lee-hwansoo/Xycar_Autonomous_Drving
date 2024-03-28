@@ -37,7 +37,10 @@ template <typename PREC>
 IMGPreProcessor<PREC>::~IMGPreProcessor() {}
 
 template <typename PREC>
-void IMGPreProcessor<PREC>::preprocessImage(const cv::Mat& image, cv::Mat& blurredRoiImage ,cv::Mat& edgedRoiImage) {
+void IMGPreProcessor<PREC>::preprocessImage(cv::Mat& image, cv::Mat& blurredRoiImage ,cv::Mat& edgedRoiImage) {
+    // Undistort the image
+    cv::undistort(image, image, mCameraMatrix, mDistortionCoeffs);
+
     // Convert image to HLS color space
     cv::Mat hlsImage;
     cv::cvtColor(image, hlsImage, cv::COLOR_BGR2HLS);
@@ -50,17 +53,9 @@ void IMGPreProcessor<PREC>::preprocessImage(const cv::Mat& image, cv::Mat& blurr
     cv::Mat blackMask;
     cv::inRange(hlsImage, lowerBlack, upperBlack, blackMask);
 
-    // Undistort the image
-    cv::Mat undistortedImage;
-    cv::undistort(blackMask, undistortedImage, mCameraMatrix, mDistortionCoeffs);
-
-    // // Convert undistorted image to grayscale
-    // cv::Mat grayImage;
-    // cv::cvtColor(undistortedImage, grayImage, cv::COLOR_BGR2GRAY);
-
     // Apply Gaussian blur
     cv::Mat blurredImage;
-    cv::GaussianBlur(undistortedImage, blurredImage, cv::Size(7, 7), 0);
+    cv::GaussianBlur(blackMask, blurredImage, cv::Size(7, 7), 0);
 
     // Apply Canny edge detection
     cv::Mat edgesImage;
