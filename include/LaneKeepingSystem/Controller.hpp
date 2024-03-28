@@ -54,7 +54,7 @@ namespace Xycar
             return angle;
         }
 
-        void calculateSteeringAngle(PREC crossTrackError, PREC headingError, PREC velocity);
+        void calculateSteeringAngle(PREC crossTrackError, PREC headingError, PREC velocity) {};
 
     protected:
         PREC mResult; ///< Control output
