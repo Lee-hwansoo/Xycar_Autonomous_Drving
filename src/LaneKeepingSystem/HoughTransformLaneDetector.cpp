@@ -107,12 +107,12 @@ std::pair<Indices, Indices> HoughTransformLaneDetector<PREC>::divideLines(const 
         else
             slope = static_cast<PREC>(y2 - y1) / (x2 - x1);
 
-        if (-mHoughLineSlopeRange <= slope && slope < 0.0f)
+        if (-mHoughLineSlopeRange <= slope && slope < -0.1f)
         {
             leftLineSumX += static_cast<PREC>(x1 + x2) * 0.5f;
             leftLineIndices.emplace_back(i);
         }
-        else if (0.0f < slope && slope <= mHoughLineSlopeRange)
+        else if (0.1f < slope && slope <= mHoughLineSlopeRange)
         {
             rightLineSumX += static_cast<PREC>(x1 + x2) * 0.5f;
             rightLineIndices.emplace_back(i);
