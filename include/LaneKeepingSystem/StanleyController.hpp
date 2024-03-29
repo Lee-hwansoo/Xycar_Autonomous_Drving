@@ -42,10 +42,11 @@ public:
      * @return
      */
     void calculateSteeringAngle(PREC crossTrackError, PREC headingError, PREC velocity);
-
+    double getResult(){return mResult;}
 private:
     PREC mGain;              ///< Stanley control gain
-    PREC mLookAheadDistance; ///< Look-ahead distance
+    PREC mLookAheadDistance;
+    PREC mResult; ///< Look-ahead distance
 };
 } // namespace Xycar
 #endif // STANLEY_CONTROLLER_HPP_
