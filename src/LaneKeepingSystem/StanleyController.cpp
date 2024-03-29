@@ -17,7 +17,7 @@ void StanleyController<PREC>::calculateSteeringAngle(PREC crossTrackError, PREC 
 
     // Calculate the steering angle using the desired heading and look-ahead distance
     // this->mResult = std::atan2(2 * mLookAheadDistance * std::sin(desiredHeading), velocity) * (180.0 / M_PI);
-    mResult = desiredHeading * (180.0 / M_PI);
+    this->mResult = desiredHeading * (180.0 / M_PI);
 }
 
 template class StanleyController<float>;

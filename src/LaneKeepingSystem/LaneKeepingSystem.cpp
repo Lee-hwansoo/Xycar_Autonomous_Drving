@@ -84,11 +84,11 @@ void LaneKeepingSystem<PREC>::run()
         float x1_center = leftPositionX;
         float x2_center = rightPositionX;
         float y_center = mEdgedRoiImage.rows/2;
-        float slope_center=staatic_cast<float>(y_center)/(x2_center-x1_center);
+        float slope_center=static_cast<float> (y_center)/(x2_center-x1_center);
         float angle_center=atan(slope_center);
         float headingAngleDegree=90-angle_center*180/M_PI;
         mStanley->calculateSteeringAngle(crossTrackError, headingAngleDegree, mXycarSpeed);
-        PREC steeringAngle = std::max(static_cast<PREC>(-kXycarSteeringAngleLimit), std::min(static_cast<PREC>(mStanley->getResult()), static_cast<PREC>(kXycarSteeringAngleLimit)));
+        PREC steeringAngle = std::max(static_cast<PREC>(-kXycarSteeringAngleLimit), std::min(static_cast<PREC>(mStanley->getControlOutput()), static_cast<PREC>(kXycarSteeringAngleLimit)));
 
         // int32_t errorFromMid = estimatedPositionX - static_cast<int32_t>(mFrame.cols / 2);
         // PREC steeringAngle = std::max(static_cast<PREC>(-kXycarSteeringAngleLimit), std::min(static_cast<PREC>(mPID->getControlOutput(errorFromMid)), static_cast<PREC>(kXycarSteeringAngleLimit)));
