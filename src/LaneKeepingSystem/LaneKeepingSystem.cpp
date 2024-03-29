@@ -81,10 +81,10 @@ void LaneKeepingSystem<PREC>::run()
         int32_t errorFromMid = estimatedPositionX - static_cast<int32_t>(mFrame.cols / 2);
         float crossTrackError = static_cast<float>(errorFromMid);
 
-        float x1_center = leftPositionX;
-        float x2_center = rightPositionX;
+        // float x1_center = (leftPositionX + rightPositionX)/2;
+        // float x2_center = rightPositionX;
         float y_center = mEdgedRoiImage.rows/2;
-        float slope_center=static_cast<float> (y_center)/(x2_center-x1_center);
+        float slope_center=static_cast<float> (y_center)/(errorFromMid);
         float angle_center=atan(slope_center);
         float headingAngleDegree=90-angle_center*180/M_PI;
         mStanley->calculateSteeringAngle(crossTrackError, headingAngleDegree, mXycarSpeed);

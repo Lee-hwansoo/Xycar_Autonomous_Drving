@@ -10,7 +10,7 @@ template <typename PREC>
 void StanleyController<PREC>::calculateSteeringAngle(PREC crossTrackError, PREC headingError, PREC velocity)
 {
     // Calculate the cross-track error (cte) compensation
-    PREC alpha = std::atan2(-mGain * crossTrackError, velocity);
+    PREC alpha = std::atan2(mGain * crossTrackError, velocity);
 
     // Calculate the desired heading angle
     PREC desiredHeading = this->normalizeAngle(headingError) + alpha;
