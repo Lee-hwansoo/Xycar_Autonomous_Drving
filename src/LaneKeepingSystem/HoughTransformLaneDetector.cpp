@@ -32,6 +32,7 @@ void HoughTransformLaneDetector<PREC>::setConfiguration(const YAML::Node& config
     mHoughMinLineLength = config["HOUGH"]["MIN_LINE_LENGTH"].as<int32_t>();
     mHoughMaxLineGap = config["HOUGH"]["MAX_LINE_GAP"].as<int32_t>();
     mDebugging = config["DEBUG"].as<bool>();
+    mLaneWidth = config["HOUGH"]["LANE_WIDTH"].as<int32_t>();
 }
 
 template <typename PREC>
@@ -71,9 +72,9 @@ int32_t HoughTransformLaneDetector<PREC>::getLinePositionX(const Lines& lines, c
     if (std::abs(m) <= std::numeric_limits<PREC>::epsilon() && std::abs(b) <= std::numeric_limits<PREC>::epsilon())
     {
         if (direction == Direction::LEFT)
-            return 0.0f;
+            return 0.0f - mLaneWidth;
         else if (direction == Direction::RIGHT)
-            return static_cast<PREC>(mImageWidth);
+            return static_cast<PREC>(mImageWidth) + mLaneWidth;
     }
 
     PREC y = static_cast<PREC>(mROIHeight) * 0.5f;

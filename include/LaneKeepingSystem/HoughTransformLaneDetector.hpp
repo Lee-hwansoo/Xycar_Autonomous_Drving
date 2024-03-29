@@ -155,6 +155,8 @@ private:
     int32_t mROIStartHeight; ///< The height of the offset for debugging
     int32_t mROIHeight;      ///< Height of ROI
 
+    int32_t mLaneWidth; ///< The width of the lane
+
     // Debug Image and flag
     cv::Mat mDebugFrame; ///< The frame for debugging
     bool mDebugging;     ///< Debugging or not
