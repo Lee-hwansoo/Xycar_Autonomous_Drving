@@ -44,7 +44,7 @@ public:
     using StopLineDetectorPtr = typename StopLineDetector<PREC>::Ptr;       ///< Pointer type of StopLineDetector
     using DetectorPtr = typename HoughTransformLaneDetector<PREC>::Ptr; ///< Pointer type of LaneDetector
 
-    static constexpr int32_t kXycarSteeringAangleLimit = 50; ///< Xycar Steering Angle Limit
+    static constexpr int32_t kXycarSteeringAngleLimit = 50; ///< Xycar Steering Angle Limit
     static constexpr double kFrameRate = 33.0;               ///< Frame rate
     /**
      * @brief Construct a new Lane Keeping System object
@@ -116,6 +116,10 @@ private:
     PREC mXycarSpeedControlThreshold; ///< Threshold of angular of xycar
     PREC mAccelerationStep;           ///< How much would accelrate xycar depending on threshold
     PREC mDecelerationStep;           ///< How much would deaccelrate xycar depending on threshold
+
+    // Stanley Control Variables
+    PREC mStanleyGain;
+    PREC mStanleyLookAheadDistance;
 
     // Debug Flag
     bool mDebugging; ///< Debugging or not

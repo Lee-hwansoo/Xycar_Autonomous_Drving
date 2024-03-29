@@ -25,7 +25,7 @@ LaneKeepingSystem<PREC>::LaneKeepingSystem()
     YAML::Node calibration = YAML::LoadFile(calibrationPath);
 
     mPID = std::make_unique<PIDController<PREC>>(config["PID"]["P_GAIN"].as<PREC>(), config["PID"]["I_GAIN"].as<PREC>(), config["PID"]["D_GAIN"].as<PREC>());
-    mStanley = std::make_unique<StanleyController<PREC>>(config["STANLEY"]["K_GAIN"].as<PREC>(), config["STANLEY"]["LOOK_AHREAD_DISTANCE"].as<PREC>());
+    mStanley = std::make_unique<StanleyController<PREC>>(mStanleyGain, mStanleyLookAheadDistance);
     mMovingAverage = std::make_unique<MovingAverageFilter<PREC>>(config["MOVING_AVERAGE_FILTER"]["SAMPLE_SIZE"].as<uint32_t>());
     mImgPreProcessor = std::make_unique<IMGPreProcessor<PREC>>(config, calibration);
     mStopLineDetector = std::make_unique<StopLineDetector<PREC>>(config);
@@ -49,6 +49,9 @@ void LaneKeepingSystem<PREC>::setParams(const YAML::Node& config)
     mAccelerationStep = config["XYCAR"]["ACCELERATION_STEP"].as<PREC>();
     mDecelerationStep = config["XYCAR"]["DECELERATION_STEP"].as<PREC>();
     mDebugging = config["DEBUG"].as<bool>();
+
+    mStanleyGain = config["STANLEY"]["K_GAIN"].as<PREC>();
+    mStanleyLookAheadDistance = config["STANLEY"]["LOOK_AHEAD_DISTANCE"].as<PREC>();
 }
 
 template <typename PREC>
@@ -69,22 +72,22 @@ void LaneKeepingSystem<PREC>::run()
         //     break;
         // }
 
-        const auto [leftPosisionX, rightPositionX] = mHoughTransformLaneDetector->getLanePosition(mFrame, mEdgedRoiImage);
+        const auto [leftPositionX, rightPositionX] = mHoughTransformLaneDetector->getLanePosition(mFrame, mEdgedRoiImage);
 
-        mMovingAverage->addSample(static_cast<int32_t>((leftPosisionX + rightPositionX) / 2));
+        mMovingAverage->addSample(static_cast<int32_t>((leftPositionX + rightPositionX) / 2));
 
         int32_t estimatedPositionX = static_cast<int32_t>(mMovingAverage->getResult());
 
         int32_t errorFromMid = estimatedPositionX - static_cast<int32_t>(mFrame.cols / 2);
-        PREC steeringAngle = std::max(static_cast<PREC>(-kXycarSteeringAangleLimit), std::min(static_cast<PREC>(mPID->getControlOutput(errorFromMid)), static_cast<PREC>(kXycarSteeringAangleLimit)));
+        PREC steeringAngle = std::max(static_cast<PREC>(-kXycarSteeringAngleLimit), std::min(static_cast<PREC>(mPID->getControlOutput(errorFromMid)), static_cast<PREC>(kXycarSteeringAngleLimit)));
 
         speedControl(steeringAngle);
         drive(steeringAngle);
 
         if (mDebugging)
         {
-            std::cout << "lpos: " << leftPosisionX << ", rpos: " << rightPositionX << ", mpos: " << estimatedPositionX << ", steeringAngle: " << steeringAngle << std::endl;
-            mHoughTransformLaneDetector->drawRectangles(leftPosisionX, rightPositionX, estimatedPositionX);
+            std::cout << "lpos: " << leftPositionX << ", rpos: " << rightPositionX << ", mpos: " << estimatedPositionX << ", steeringAngle: " << steeringAngle << std::endl;
+            mHoughTransformLaneDetector->drawRectangles(leftPositionX, rightPositionX, estimatedPositionX);
             cv::imshow("Debug", mHoughTransformLaneDetector->getDebugFrame());
             cv::waitKey(1);
         }
