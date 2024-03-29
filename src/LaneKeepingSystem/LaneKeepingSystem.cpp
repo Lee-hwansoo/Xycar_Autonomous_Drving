@@ -78,20 +78,19 @@ void LaneKeepingSystem<PREC>::run()
 
         int32_t estimatedPositionX = static_cast<int32_t>(mMovingAverage->getResult());
 
-        int32_t errorFromMid = estimatedPositionX - static_cast<int32_t>(mFrame.cols / 2);
-        float crossTrackError = static_cast<float>(errorFromMid);
-
+        // int32_t errorFromMid = estimatedPositionX - static_cast<int32_t>(mFrame.cols / 2);
+        // float crossTrackError = static_cast<float>(errorFromMid);
         // float x1_center = (leftPositionX + rightPositionX)/2;
         // float x2_center = rightPositionX;
-        float y_center = mEdgedRoiImage.rows/2;
-        float slope_center=static_cast<float> (y_center)/(errorFromMid);
-        float angle_center=atan(slope_center);
-        float headingAngleDegree=90-angle_center*180/M_PI;
-        mStanley->calculateSteeringAngle(crossTrackError, headingAngleDegree, mXycarSpeed);
-        PREC steeringAngle = std::max(static_cast<PREC>(-kXycarSteeringAngleLimit), std::min(static_cast<PREC>(mStanley->getControlOutput()), static_cast<PREC>(kXycarSteeringAngleLimit)));
+        // float y_center = mEdgedRoiImage.rows/2;
+        // float slope_center=static_cast<float> (y_center)/(errorFromMid);
+        // float angle_center=atan(slope_center);
+        // float headingAngleDegree=90-angle_center*180/M_PI;
+        // mStanley->calculateSteeringAngle(crossTrackError, headingAngleDegree, mXycarSpeed);
+        // PREC steeringAngle = std::max(static_cast<PREC>(-kXycarSteeringAngleLimit), std::min(static_cast<PREC>(mStanley->getControlOutput()), static_cast<PREC>(kXycarSteeringAngleLimit)));
 
-        // int32_t errorFromMid = estimatedPositionX - static_cast<int32_t>(mFrame.cols / 2);
-        // PREC steeringAngle = std::max(static_cast<PREC>(-kXycarSteeringAngleLimit), std::min(static_cast<PREC>(mPID->getControlOutput(errorFromMid)), static_cast<PREC>(kXycarSteeringAngleLimit)));
+        int32_t errorFromMid = estimatedPositionX - static_cast<int32_t>(mFrame.cols / 2);
+        PREC steeringAngle = std::max(static_cast<PREC>(-kXycarSteeringAngleLimit), std::min(static_cast<PREC>(mPID->getControlOutput(errorFromMid)), static_cast<PREC>(kXycarSteeringAngleLimit)));
 
         speedControl(steeringAngle);
         drive(steeringAngle);
