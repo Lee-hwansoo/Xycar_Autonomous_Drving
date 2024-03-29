@@ -39,11 +39,12 @@ IMGPreProcessor<PREC>::~IMGPreProcessor() {}
 template <typename PREC>
 void IMGPreProcessor<PREC>::preprocessImage(cv::Mat& image, cv::Mat& maskedRoiImage, cv::Mat& edgedRoiImage) {
     // Undistort the image
-    cv::undistort(image, image, mCameraMatrix, mDistortionCoeffs);
+    cv::Mat undistortedImage;
+    cv::undistort(image, undistortedImage, mCameraMatrix, mDistortionCoeffs);
 
     // Apply Gaussian blur
     cv::Mat blurredImage;
-    cv::GaussianBlur(image, blurredImage, cv::Size(5, 5), 0);
+    cv::GaussianBlur(undistortedImage, blurredImage, cv::Size(5, 5), 0);
 
     // Convert image to HLS color space
     cv::Mat hlsImage;
