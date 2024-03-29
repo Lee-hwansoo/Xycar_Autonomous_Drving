@@ -10,7 +10,7 @@ PREC PIDController<PREC>::getControlOutput(PREC errorFromMid){
     integral += errorFromMid;
     derivative = errorFromMid - prev_error;
     prev_error = errorFromMid;
-    if(abs(errorFromMid) > 70)
+    if(abs(errorFromMid) > 65)
         return 0.52*errorFromMid + Ki*integral + Kd*derivative;
 
     return Kp*errorFromMid + Ki*integral + Kd*derivative;
